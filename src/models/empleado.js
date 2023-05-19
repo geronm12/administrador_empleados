@@ -13,6 +13,16 @@ const empleadoSchema = new Schema({
     type: String,
     require: true,
   },
+  fecha_creacion: {
+    type: Date,
+    default: Date.now,
+  },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-export default mongoose.model("Empleado", empleadoSchema);
+const EmpleadoDb = mongoose.model("Empleado", empleadoSchema);
+
+export default EmpleadoDb;

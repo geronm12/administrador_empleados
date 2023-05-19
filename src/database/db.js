@@ -1,12 +1,10 @@
 import mongoose from "mongoose";
 
 mongoose.set("strictQuery");
-
+//connection string -> cadena de conexión
 function connect() {
   mongoose
-    .connect(
-      "mongodb+srv://gerolpz01:5RMzWS0hWR2DsAiw@cluster0.8ycb5f6.mongodb.net/ProyectoA"
-    )
+    .connect(process.env.DB_CONNECTION)
     .then((res) => console.log("Conectado correctamente a la bd."))
     .catch((err) => console.log(err));
 }
