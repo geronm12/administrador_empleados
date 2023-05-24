@@ -13,6 +13,7 @@ const empleadoSchema = new Schema({
     type: String,
     require: true,
   },
+  fotoUrl: String,
   fecha_creacion: {
     type: Date,
     default: Date.now,
@@ -20,6 +21,10 @@ const empleadoSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
+  },
+  usuario_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Usuario",
   },
 });
 

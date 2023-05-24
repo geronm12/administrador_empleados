@@ -1,4 +1,5 @@
 import EmpleadoDb from "../models/empleado";
+import { CreateUser } from "./usuario.controller";
 
 async function GetEmployees(req, res) {
   try {
@@ -21,7 +22,7 @@ async function GetEmployeeById(req, res) {
   try {
     const { id } = req.params;
 
-    const result = await EmpleadoDb.findById(id);
+    const result = await EmpleadoDb.findById(id).populate("usuario_id");
 
     return res.status(200).json({
       ok: true,
@@ -37,12 +38,18 @@ async function GetEmployeeById(req, res) {
 
 async function AddEmployee(req, res) {
   try {
-    const { nombre, apellido, dni } = req.body;
+    const { nombre, apellido, dni, fotoUrl } = req.body;
+    const user = await CreateUser({
+      empleadoNombre: nombre,
+      empleadoApellido: apellido,
+    });
 
     const employee = await EmpleadoDb.create({
       nombre,
       apellido,
       dni,
+      fotoUrl,
+      usuario_id: user._id,
     });
 
     return res.status(200).json({

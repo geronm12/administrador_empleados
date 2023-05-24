@@ -11,6 +11,7 @@ import {
 
 const router = express.Router();
 
+//Debería tener un usuario tipo administrador
 router.get("/empleados", GetEmployees);
 router.get("/empleados/:id", GetEmployeeById);
 router.post("/empleados", AddEmployee);
