@@ -1,4 +1,5 @@
 import EmpleadoDb from "../models/empleado";
+import { UploadPicture } from "./clodinary.controller";
 import { CreateUser } from "./usuario.controller";
 
 async function GetEmployees(req, res) {
@@ -120,6 +121,35 @@ async function ActivateEmployee(req, res) {
   });
 }
 
+async function UploadProfilePicture(req, res) {
+  try {
+    const { id } = req.params;
+    const photo = req.files["file"][0];
+    const { secure_url } = await UploadPicture(photo);
+    const response = await EmpleadoDb.findByIdAndUpdate(id, {
+      $set: {
+        fotoUrl: secure_url,
+      },
+    });
+
+    response.fotoUrl = secure_url;
+
+    if (response) {
+      return res.status(200).json({
+        ok: true,
+        employee: response,
+      });
+    }
+
+    return res.status(400).json({
+      ok: false,
+      error_msg: "Ocurrió un error al subir la foto",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export {
   GetEmployees,
   GetEmployeeById,
@@ -128,4 +158,6 @@ export {
   DeleteEmployee,
   LogicalDeleteEmployee,
   ActivateEmployee,
+  UploadPicture,
+  UploadProfilePicture,
 };

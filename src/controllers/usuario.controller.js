@@ -1,15 +1,13 @@
 import { Compare, Encrypt } from "../helpers/password.helper";
 import UsuarioDb from "../models/usuario";
+import EmpleadoDb from "../models/empleado";
 
 const defaultPw = "123456";
 
 async function CreateUser({ empleadoNombre, empleadoApellido }) {
   try {
     const pw = await Encrypt(defaultPw);
-    //Hacer substring de las letras e ir verificando
-    //si el mail existe
-    //si el mail existe, agregar una letra al nombre
-    //bucles (for, foreach)
+
     const mail = UsuarioDb.generateCorpMail(empleadoNombre, empleadoApellido);
     const usuarioCreado = await UsuarioDb.create({
       email: mail,
@@ -51,6 +49,12 @@ async function Login(req, res) {
 
   const userLogged = await UsuarioDb.findOne({ email });
 
+  if (!userLogged) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "Usuario o Contraseña incorrectos" });
+  }
+
   const passwordCheck = await Compare(password, userLogged.password);
 
   if (!passwordCheck)
@@ -60,9 +64,15 @@ async function Login(req, res) {
 
   const token = userLogged.generateAccesToken();
 
+  const employee = await EmpleadoDb.findOne({
+    usuario_id: userLogged._id,
+  });
+
   return res.json({
     ok: true,
     data: token,
+    employeeId: employee._id,
+    foto: employee.fotoUrl,
   });
 }
 

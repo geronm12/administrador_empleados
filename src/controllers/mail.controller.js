@@ -1,4 +1,5 @@
 import MailDb from "../models/mails";
+import UserDb from "../models/usuario";
 
 async function SendMail(req, res) {
   try {
@@ -6,16 +7,25 @@ async function SendMail(req, res) {
     const { _id } = payload;
     const { asunto, cuerpo, usuarioTo } = req.body;
 
-    const nuevoMail = await MailDb.create({
-      asunto,
-      cuerpo,
-      usuarioFrom: _id,
-      usuarioTo,
-    });
+    const user = await UserDb.findOne({ email: usuarioTo });
+
+    if (user) {
+      const nuevoMail = await MailDb.create({
+        asunto,
+        cuerpo,
+        usuarioFrom: _id,
+        usuarioTo: user._id,
+      });
+
+      res.json({
+        ok: true,
+        data: nuevoMail,
+      });
+    }
 
     res.json({
-      ok: true,
-      data: nuevoMail,
+      ok: false,
+      error_msg: "El usuario no existe",
     });
   } catch (error) {
     console.log(error);

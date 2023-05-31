@@ -6,12 +6,6 @@ import empleadoRoute from "./routes/empleado.routes";
 import userRoute from "./routes/usuario.routes";
 import mailRoute from "./routes/mail.routes";
 
-//babel -> Funciona para javascript moderno
-//API -> Aplication Programming Interface
-//Endpoint o Url
-//GET, POST, PUT, DELETE -> Configuración para la comunicación
-//
-
 dotenv.config();
 
 const app = express();
